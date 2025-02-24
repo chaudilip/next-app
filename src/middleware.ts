@@ -1,19 +1,16 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-const isPublicRoute = createRouteMatcher(["/sign-in(.*)", "/sign-up(.*)"]);
-const isProtectedRoute = createRouteMatcher(["/dashboard(.*)", "/(.*)"]);
+const isPublicRoute = createRouteMatcher([
+  "/sign-in(.*)", // Match all variations of /sign-in, including dynamic routes
+  "/sign-up(.*)",
+]);
 
 export default clerkMiddleware(async (auth, req) => {
-  const { userId, redirectToSignIn } = await auth();
-  if (isPublicRoute(req)) {
-    return;
-  }
-
-  if (!userId && isProtectedRoute(req)) {
-    return redirectToSignIn({ returnBackUrl: req.url });
+  if (!isPublicRoute(req)) {
+    await auth.protect();
   }
 });
 
 export const config = {
-  matcher: ["/((?!_next|_static|favicon.ico|sign-in|sign-up).*)"],
+  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
 };
