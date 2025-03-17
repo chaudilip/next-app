@@ -6,14 +6,13 @@ const ServerLayout = async ({
 }: {
     children: React.ReactNode;
 }) => {
-
     return (
-        <div className="h-[100vh]">
-            <div className="hidden md:flex h-full w-[48px] z-30 flex-col inset-y-0">
+        <div className="h-full">
+            <div className="hidden md:flex h-full w-[48px] z-30 flex-col fixed inset-y-0">
                 {/*ForSideBar */}
                 <NavigationSidebar />
             </div>
-            <main>
+            <main className="md:pl-[48px] h-full">
                 {children}
             </main>
         </div>
